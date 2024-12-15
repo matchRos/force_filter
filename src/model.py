@@ -16,8 +16,21 @@ def build_autoencoder(window_size):
     model.compile(optimizer='adam', loss='mse')
     return model
 
+def build_larger_autoencoder(window_size):
+    model = Sequential([
+        Conv1D(32, kernel_size=3, activation='relu', padding='same', input_shape=(window_size, 1)),
+        Conv1D(16, kernel_size=3, activation='relu', padding='same'),
+        Conv1D(8, kernel_size=3, activation='relu', padding='same'),
+        Conv1D(16, kernel_size=3, activation='relu', padding='same'),
+        Conv1D(32, kernel_size=3, activation='relu', padding='same'),
+        Conv1D(1, kernel_size=3, activation='linear', padding='same')
+    ])
+    model.compile(optimizer='adam', loss='mse')
+    return model
 
-def train_autoencoder(model, X_train, y_train, X_test, y_test, epochs=20, batch_size=32):
+
+
+def train_autoencoder(model, X_train, y_train, X_test, y_test, epochs=50, batch_size=16):
     """Trainiert den Autoencoder."""
     history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=epochs, batch_size=batch_size)
     return history

@@ -1,7 +1,7 @@
 from src.signal_simulation import simulate_signals
 from src.data_preparation import prepare_training_data
 from src.model import build_autoencoder, train_autoencoder
-from src.evaluation import evaluate_model
+from src.evaluation import evaluate_model, plot_training_history, evaluate_model_predictions, plot_reconstructed_signal, compute_snr
 
 def main():
     # 1. Daten simulieren
@@ -25,9 +25,21 @@ def main():
     print(f"X_train shape: {X_train.shape}")
     print(f"y_train shape: {y_train.shape}")
 
-
     # 4. Modell trainieren
-    train_autoencoder(model, X_train, y_train, X_test, y_test)
+    history = train_autoencoder(model, X_train, y_train, X_test, y_test, epochs=50, batch_size=16)
+
+    # Visualisiere den Verlauf des Trainings
+    plot_training_history(history)
+
+    y_pred = model.predict(X_test)
+    evaluate_model_predictions(y_test, y_pred)
+
+    plot_reconstructed_signal(y_test, y_pred, index=0)
+
+    snr_noisy = compute_snr(y_test.flatten(), y_test.flatten() - X_test.flatten())
+    snr_filtered = compute_snr(y_test.flatten(), y_test.flatten() - y_pred.flatten())
+    print(f"SNR (Noisy): {snr_noisy:.2f} dB")
+    print(f"SNR (Filtered): {snr_filtered:.2f} dB")
 
     # 5. Modell evaluieren
     evaluate_model(model, X_test, y_test)
