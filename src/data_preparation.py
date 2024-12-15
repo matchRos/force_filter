@@ -10,7 +10,7 @@ def load_data(file_path):
 def create_sequences(data, window_size):
     """Erstellt Sequenzen für das Training."""
     sequences = []
-    for i in range(len(data) - window_size):
+    for i in range(len(data) - window_size + 1):  # "+1", damit die Länge korrekt ist
         sequences.append(data[i:i + window_size])
     return np.array(sequences)
 

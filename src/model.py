@@ -15,7 +15,7 @@ def build_autoencoder(window_size):
         UpSampling1D(size=2),
         Conv1D(16, kernel_size=3, activation='relu', padding='same'),
         UpSampling1D(size=2),
-        Conv1D(1, kernel_size=3, activation='linear', padding='same')
+        Conv1D(1, kernel_size=3, activation='linear', padding='same')  # Ausgabe: gleiche Länge wie Eingabe
     ])
     model.compile(optimizer='adam', loss='mse')
     return model
