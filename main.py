@@ -13,6 +13,18 @@ def main():
 
     # 3. Autoencoder aufbauen
     model = build_autoencoder(window_size)
+    print(model.summary())
+
+    # Simuliere eine Eingabe, um die Ausgabeform zu prüfen
+    import numpy as np
+    example_input = np.random.rand(1, window_size, 1)  # Batchgröße 1, Fenstergröße 50, 1 Feature
+    example_output = model.predict(example_input)
+    print(f"Eingabeform: {example_input.shape}, Ausgabeform: {example_output.shape}")
+
+
+    print(f"X_train shape: {X_train.shape}")
+    print(f"y_train shape: {y_train.shape}")
+
 
     # 4. Modell trainieren
     train_autoencoder(model, X_train, y_train, X_test, y_test)
