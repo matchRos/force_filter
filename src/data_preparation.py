@@ -14,10 +14,19 @@ def create_sequences(data, window_size):
         sequences.append(data[i:i + window_size])
     return np.array(sequences)
 
-def prepare_training_data(file_path, window_size=50):
-    """Erstellt die Trainings- und Testdaten."""
-    noisy_signal, ground_truth = load_data(file_path)
-    X = create_sequences(noisy_signal, window_size)
-    y = create_sequences(ground_truth, window_size)
+def prepare_augmented_training_data(file_paths, window_size=50):
+    """Bereitet Trainings- und Testdaten aus mehreren augmentierten Datensätzen vor."""
+    X, y = [], []
+    for file_path in file_paths:
+        noisy_signal, ground_truth = load_data(file_path)
+        X.append(create_sequences(noisy_signal, window_size))
+        y.append(create_sequences(ground_truth, window_size))
+    
+    # Alle Daten kombinieren
+    X = np.concatenate(X, axis=0)
+    y = np.concatenate(y, axis=0)
+
+    # Train-Test-Split
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     return X_train[..., np.newaxis], X_test[..., np.newaxis], y_train[..., np.newaxis], y_test[..., np.newaxis]
+

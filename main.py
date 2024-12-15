@@ -1,15 +1,17 @@
-from src.signal_simulation import simulate_signals
-from src.data_preparation import prepare_training_data
+from src.signal_simulation import simulate_augmented_signals
+from src.data_preparation import prepare_augmented_training_data
 from src.model import build_autoencoder, train_autoencoder
 from src.evaluation import evaluate_model, plot_training_history, evaluate_model_predictions, plot_reconstructed_signal, compute_snr
 
 def main():
     # 1. Daten simulieren
-    t, ground_truth, noisy_signal = simulate_signals()
+    t, ground_truth, augmented_signals = simulate_augmented_signals()
 
-    # 2. Trainings- und Testdaten vorbereiten
+    # Bereite Trainingsdaten aus augmentierten Signalen vor
     window_size = 50
-    X_train, X_test, y_train, y_test = prepare_training_data("data/raw_signals.csv", window_size)
+    file_paths = [f"data/raw_signals_{i}.csv" for i in range(len(augmented_signals))]
+    X_train, X_test, y_train, y_test = prepare_augmented_training_data(file_paths, window_size)
+
 
     # 3. Autoencoder aufbauen
     model = build_autoencoder(window_size)
@@ -26,7 +28,7 @@ def main():
     print(f"y_train shape: {y_train.shape}")
 
     # 4. Modell trainieren
-    history = train_autoencoder(model, X_train, y_train, X_test, y_test, epochs=50, batch_size=16)
+    history = train_autoencoder(model, X_train, y_train, X_test, y_test, epochs=100, batch_size=16)
 
     # Visualisiere den Verlauf des Trainings
     plot_training_history(history)

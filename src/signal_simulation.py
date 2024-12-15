@@ -24,9 +24,16 @@ def simulate_augmented_signals(save_to_file=True):
     ground_truth = generate_ground_truth(t)
 
     # Erstelle augmentierte Signale
-    augmented_signals = augment_signal(ground_truth)
+    noise_levels = [5, 10, 15]  # Beispiel: Unterschiedliche Rauschpegel
+    augmented_signals = augment_signal(ground_truth, noise_levels)
 
     if save_to_file:
         for i, signal in enumerate(augmented_signals):
-            pd.DataFrame({'time': t, 'ground_truth': ground_truth, f'noisy_signal_{i}': signal}).to_csv(f"data/raw_signals_{i}.csv", index=False)
+            data = pd.DataFrame({
+                'time': t,
+                'ground_truth': ground_truth,
+                'noisy_signal': signal  # Stelle sicher, dass die Spalte "noisy_signal" heißt
+            })
+            data.to_csv(f"data/raw_signals_{i}.csv", index=False)
     return t, ground_truth, augmented_signals
+
