@@ -5,7 +5,7 @@ def filter_real_time_data(model, data_stream, window_size=100):
     """Filtert Daten in Echtzeit."""
     buffer = []
 
-    for data_point in data_stream:
+    for idx , data_point in enumerate(data_stream):
         buffer.append(data_point)
 
         if len(buffer) == window_size:
@@ -21,11 +21,13 @@ def filter_real_time_data(model, data_stream, window_size=100):
             # Entferne das älteste Element
             buffer.pop(0)
 
-            # Visualisiere das gefilterte Signal
-            plt.figure()
-            plt.plot(buffer)
-            plt.plot(filtered_output)
-            plt.title("Filtered Output")
-            plt.xlabel("Time")
-            plt.ylabel("Amplitude")
-            plt.show()
+            if idx % 20 == 0:
+
+                # Visualisiere das gefilterte Signal
+                plt.figure()
+                plt.plot(buffer)
+                plt.plot(filtered_output)
+                plt.title("Filtered Output")
+                plt.xlabel("Time")
+                plt.ylabel("Amplitude")
+                plt.show()
